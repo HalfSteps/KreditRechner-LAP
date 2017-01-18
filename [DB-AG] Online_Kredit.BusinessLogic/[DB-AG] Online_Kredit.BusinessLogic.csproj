@@ -377,6 +377,9 @@
     <Compile Include="Arbeitgeber.cs">
       <DependentUpon>OnlineKreditModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Bearbeitungsgebühr.cs">
+      <DependentUpon>OnlineKreditModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="BeschaeftigungsArt.cs">
       <DependentUpon>OnlineKreditModel.tt</DependentUpon>
     </Compile>
@@ -437,6 +440,9 @@
       <DependentUpon>OnlineKreditModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Wohnart.cs">
+      <DependentUpon>OnlineKreditModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Zahlungsbestätigung.cs">
       <DependentUpon>OnlineKreditModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>

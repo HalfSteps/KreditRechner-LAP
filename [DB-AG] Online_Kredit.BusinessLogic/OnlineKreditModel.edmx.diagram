@@ -36,6 +36,9 @@
         <EntityTypeShape EntityType="dbKreditRechnerModel.Ort" Width="1.5" PointX="3.5" PointY="18.875" />
         <AssociationConnector Association="dbKreditRechnerModel.FK__tblKontak__FKOrt__2E1BDC42" />
         <AssociationConnector Association="dbKreditRechnerModel.FK__tblOrt__FKLand__1273C1CD" />
+        <EntityTypeShape EntityType="dbKreditRechnerModel.Zahlungsbestätigung" Width="1.5" PointX="1.25" PointY="19.5" />
+        <AssociationConnector Association="dbKreditRechnerModel.FK__tblZahlun__IDBes__3A4CA8FD" />
+        <EntityTypeShape EntityType="dbKreditRechnerModel.Bearbeitungsgebühr" Width="1.5" PointX="7.5" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

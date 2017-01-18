@@ -19,5 +19,6 @@ namespace _DB_AG__Online_Kredit.Models
         [Range(4, 90, ErrorMessage = "Laufzeit liegt außerhalb des Bereichs on 4 bis 90 Monaten")]
         public short Laufzeit { get; set; }
 
+        public string KreditStatus { get; set; } = "Unvollständig";
     }
 }

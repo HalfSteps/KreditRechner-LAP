@@ -15,6 +15,12 @@
           <Property Name="FKBranche" Type="int" />
           <Property Name="BeschaeftigtSeit" Type="date" />
         </EntityType>
+        <EntityType Name="tblBearbeitungsgebühr">
+          <Key>
+            <PropertyRef Name="Betrag" />
+          </Key>
+          <Property Name="Betrag" Type="decimal" Precision="4" Scale="2" Nullable="false" />
+        </EntityType>
         <EntityType Name="tblBeschaeftigungsart">
           <Key>
             <PropertyRef Name="IDBeschaeftigungsart" />
@@ -90,7 +96,7 @@
           <Property Name="IDKredit" Type="int" Nullable="false" />
           <Property Name="GewuenschterKredit" Type="decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="GewuenschteLaufzeit" Type="smallint" Nullable="false" />
-          <Property Name="KreditBewilligt" Type="bit" Nullable="false" />
+          <Property Name="KreditStatus" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="tblKunde">
           <Key>
@@ -145,6 +151,15 @@
           </Key>
           <Property Name="IDWohnart" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Wohnart" Type="varchar" MaxLength="40" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblZahlungsbestätigung">
+          <Key>
+            <PropertyRef Name="IDBestätigung" />
+          </Key>
+          <Property Name="IDBestätigung" Type="int" Nullable="false" />
+          <Property Name="AntragsDatum" Type="datetime" Nullable="false" />
+          <Property Name="ZahlungsErinnerung" Type="bit" Nullable="false" />
+          <Property Name="Bezahlt" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK__tblArbeit__FKBes__36B12243">
           <End Role="tblBeschaeftigungsart" Type="Self.tblBeschaeftigungsart" Multiplicity="1" />
@@ -230,7 +245,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__tblKredit__IDKre__02FC7413">
+        <Association Name="FK__tblKredit__IDKre__2BFE89A6">
           <End Role="tblKunde" Type="Self.tblKunde" Multiplicity="1" />
           <End Role="tblKredit" Type="Self.tblKredit" Multiplicity="0..1" />
           <ReferentialConstraint>
@@ -326,8 +341,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__tblZahlun__IDBes__3A4CA8FD">
+          <End Role="tblKunde" Type="Self.tblKunde" Multiplicity="1" />
+          <End Role="tblZahlungsbestätigung" Type="Self.tblZahlungsbestätigung" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tblKunde">
+              <PropertyRef Name="IDKunde" />
+            </Principal>
+            <Dependent Role="tblZahlungsbestätigung">
+              <PropertyRef Name="IDBestätigung" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="dbKreditRechnerModelStoreContainer">
           <EntitySet Name="tblArbeitgeber" EntityType="Self.tblArbeitgeber" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblBearbeitungsgebühr" EntityType="Self.tblBearbeitungsgebühr" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblBeschaeftigungsart" EntityType="Self.tblBeschaeftigungsart" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblBranche" EntityType="Self.tblBranche" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblEinstellungen" EntityType="Self.tblEinstellungen" Schema="dbo" store:Type="Tables" />
@@ -343,6 +371,7 @@
           <EntitySet Name="tblSchulabschluss" EntityType="Self.tblSchulabschluss" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblTitel" EntityType="Self.tblTitel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblWohnart" EntityType="Self.tblWohnart" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblZahlungsbestätigung" EntityType="Self.tblZahlungsbestätigung" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__tblArbeit__FKBes__36B12243" Association="Self.FK__tblArbeit__FKBes__36B12243">
             <End Role="tblBeschaeftigungsart" EntitySet="tblBeschaeftigungsart" />
             <End Role="tblArbeitgeber" EntitySet="tblArbeitgeber" />
@@ -371,7 +400,7 @@
             <End Role="tblKunde" EntitySet="tblKunde" />
             <End Role="tblKontoDaten" EntitySet="tblKontoDaten" />
           </AssociationSet>
-          <AssociationSet Name="FK__tblKredit__IDKre__02FC7413" Association="Self.FK__tblKredit__IDKre__02FC7413">
+          <AssociationSet Name="FK__tblKredit__IDKre__2BFE89A6" Association="Self.FK__tblKredit__IDKre__2BFE89A6">
             <End Role="tblKunde" EntitySet="tblKunde" />
             <End Role="tblKredit" EntitySet="tblKredit" />
           </AssociationSet>
@@ -402,6 +431,10 @@
           <AssociationSet Name="FK__tblOrt__FKLand__1273C1CD" Association="Self.FK__tblOrt__FKLand__1273C1CD">
             <End Role="tblLand" EntitySet="tblLand" />
             <End Role="tblOrt" EntitySet="tblOrt" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblZahlun__IDBes__3A4CA8FD" Association="Self.FK__tblZahlun__IDBes__3A4CA8FD">
+            <End Role="tblKunde" EntitySet="tblKunde" />
+            <End Role="tblZahlungsbestätigung" EntitySet="tblZahlungsbestätigung" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -524,6 +557,7 @@
           <NavigationProperty Name="Titel" Relationship="Self.FK__tblKunde__FKTite__25869641" FromRole="tblKunde" ToRole="tblTitel" />
           <NavigationProperty Name="Wohnart" Relationship="Self.FK__tblKunde__FKWohn__286302EC" FromRole="tblKunde" ToRole="tblWohnart" />
           <NavigationProperty Name="KreditWunsch" Relationship="dbKreditRechnerModel.FK__tblKredit__IDKre__02FC7413" FromRole="Kunde" ToRole="tblKredit" />
+          <NavigationProperty Name="Zahlungsbestätigung" Relationship="dbKreditRechnerModel.FK__tblZahlun__IDBes__3A4CA8FD" FromRole="Kunde" ToRole="tblZahlungsbestätigung" />
         </EntityType>
         <EntityType Name="Land">
           <Key>
@@ -814,6 +848,12 @@
             <End Role="Kunde" EntitySet="AlleKunden" />
             <End Role="tblKredit" EntitySet="AlleKreditWünsche" />
           </AssociationSet>
+          <EntitySet Name="tblZahlungsbestätigung" EntityType="dbKreditRechnerModel.Zahlungsbestätigung" />
+          <AssociationSet Name="FK__tblZahlun__IDBes__3A4CA8FD" Association="dbKreditRechnerModel.FK__tblZahlun__IDBes__3A4CA8FD">
+            <End Role="Kunde" EntitySet="AlleKunden" />
+            <End Role="tblZahlungsbestätigung" EntitySet="tblZahlungsbestätigung" />
+          </AssociationSet>
+          <EntitySet Name="tblBearbeitungsgebühr" EntityType="dbKreditRechnerModel.Bearbeitungsgebühr" />
         </EntityContainer>
         <EntityType Name="KreditWunsch">
           <Key>
@@ -822,8 +862,8 @@
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="Betrag" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
           <Property Name="Laufzeit" Type="Int16" Nullable="false" />
-          <Property Name="Bewilligt" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Kunde" Relationship="dbKreditRechnerModel.FK__tblKredit__IDKre__02FC7413" FromRole="tblKredit" ToRole="Kunde" />
+          <Property Name="KreditStatus" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK__tblKredit__IDKre__02FC7413">
           <End Type="dbKreditRechnerModel.Kunde" Role="Kunde" Multiplicity="1" />
@@ -837,6 +877,34 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Zahlungsbestätigung">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="AntragsDatum" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ZahlungsErinnerung" Type="Boolean" Nullable="false" />
+          <Property Name="Bezahlt" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Kunde" Relationship="dbKreditRechnerModel.FK__tblZahlun__IDBes__3A4CA8FD" FromRole="tblZahlungsbestätigung" ToRole="Kunde" />
+        </EntityType>
+        <Association Name="FK__tblZahlun__IDBes__3A4CA8FD">
+          <End Type="dbKreditRechnerModel.Kunde" Role="Kunde" Multiplicity="1" />
+          <End Type="dbKreditRechnerModel.Zahlungsbestätigung" Role="tblZahlungsbestätigung" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Kunde">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblZahlungsbestätigung">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Bearbeitungsgebühr">
+          <Key>
+            <PropertyRef Name="Betrag" />
+          </Key>
+          <Property Name="Betrag" Type="Decimal" Nullable="false" Precision="4" Scale="2" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -993,10 +1061,27 @@
           <EntitySetMapping Name="AlleKreditWünsche">
             <EntityTypeMapping TypeName="dbKreditRechnerModel.KreditWunsch">
               <MappingFragment StoreEntitySet="tblKredit">
-                <ScalarProperty Name="Bewilligt" ColumnName="KreditBewilligt" />
+                <ScalarProperty Name="KreditStatus" ColumnName="KreditStatus" />
                 <ScalarProperty Name="Laufzeit" ColumnName="GewuenschteLaufzeit" />
                 <ScalarProperty Name="Betrag" ColumnName="GewuenschterKredit" />
                 <ScalarProperty Name="ID" ColumnName="IDKredit" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblZahlungsbestätigung">
+            <EntityTypeMapping TypeName="dbKreditRechnerModel.Zahlungsbestätigung">
+              <MappingFragment StoreEntitySet="tblZahlungsbestätigung">
+                <ScalarProperty Name="Bezahlt" ColumnName="Bezahlt" />
+                <ScalarProperty Name="ZahlungsErinnerung" ColumnName="ZahlungsErinnerung" />
+                <ScalarProperty Name="AntragsDatum" ColumnName="AntragsDatum" />
+                <ScalarProperty Name="ID" ColumnName="IDBestätigung" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblBearbeitungsgebühr">
+            <EntityTypeMapping TypeName="dbKreditRechnerModel.Bearbeitungsgebühr">
+              <MappingFragment StoreEntitySet="tblBearbeitungsgebühr">
+                <ScalarProperty Name="Betrag" ColumnName="Betrag" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

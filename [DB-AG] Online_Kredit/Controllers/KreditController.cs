@@ -7,6 +7,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Net;
+using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace _DB_AG__Online_Kredit.Controllers
 {
@@ -28,6 +31,7 @@ namespace _DB_AG__Online_Kredit.Controllers
                 KreditWunsch wunsch = KreditVerwaltung.KreditLaden(k_id);
                 model.KreditBetrag = (int)wunsch.Betrag;
                 model.Laufzeit = wunsch.Laufzeit;
+                model.KreditStatus = wunsch.KreditStatus;
             }
 
 
@@ -563,5 +567,57 @@ namespace _DB_AG__Online_Kredit.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Freigabe(ZusammenfassungsModel model)
+        {
+            if (ModelState.IsValid)
+            {
+
+                model.ID_Kunde = int.Parse(Request.Cookies["id"].Value);
+                Kunde aktKunde = KreditVerwaltung.KundeLaden(model.ID_Kunde);
+                Bearbeitungsgebühr aktBearbeitungsgebühr = KreditVerwaltung.BearbeitungsgebührLaden();
+
+                model.EMail = aktKunde.KontaktDaten.EMail;
+                model.Geschlecht = aktKunde.Geschlecht;
+                model.Vorname = aktKunde.Vorname;
+                model.Nachname = aktKunde.Nachname;
+                model.BearbeitungsGebühren = aktBearbeitungsgebühr.Betrag;
+
+                var Benachrichtigung = "<p>{0} {1} {2}</p> <p>Die Bearbeitungsgebühren für ihren Online Antrag!</p><br/>Sie haben einen Kreditantrag bei der Infinitus Bank beantragt. <br/> Um Ihren Kreditantrag zu bearbeiten, brauchen wir eine Bearbeitungsgebühr von {3}€  ";
+                var Bankverbindung = "<p>Senden Sie den Betrag <br/> An die: Infinitus Bank <br/> BIC:  INFUSB <br/> IBAN:  AT55 6000 0880 0330 4001";
+                var message = new MailMessage();
+                message.To.Add(new MailAddress(model.EMail));   
+                message.From = new MailAddress("stephan.stankovic@bbrz.at"); 
+                message.Subject = "Ihr Kredit-Antrag ist so gut wie abgeschlossen!";
+                message.Body = string.Format(Benachrichtigung, model.Geschlecht, model.Vorname, model.Nachname, model.BearbeitungsGebühren);
+                message.Body = string.Format(Bankverbindung);
+                message.IsBodyHtml = true;
+                
+                using (var smtp = new SmtpClient())
+                {
+                    var credential = new NetworkCredential
+                    {
+                        UserName = "stephan.stankovic",  
+                        Password = "Neverworld5"  
+                    };
+                    smtp.Credentials = credential;
+                    smtp.Host = "SRV08.itccn.loc";
+                    smtp.Port = 25;
+                    //smtp.EnableSsl = true;
+                    await smtp.SendMailAsync(message);
+
+
+                    return RedirectToAction("EMailGesendet");
+                }
+            }
+            return View(model);
+        }
+
+
+        public ActionResult EMailGesendet()
+        {
+            return View();
+        }
     }
 }

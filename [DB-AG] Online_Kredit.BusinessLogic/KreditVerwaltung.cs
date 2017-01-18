@@ -85,6 +85,7 @@ namespace _DB_AG__Online_Kredit.BusinessLogic
 
                         kreditWunsch.Betrag = (decimal)kreditBetrag;
                         kreditWunsch.Laufzeit = laufzeit;
+                        kreditWunsch.KreditStatus = "Unvollständig";
                         kreditWunsch.ID = idKunde;
                     }
 
@@ -971,33 +972,33 @@ namespace _DB_AG__Online_Kredit.BusinessLogic
             return (kontaktOrt);
         }
 
-        //public static Ort LandDatenLaden(int id)
-        //{
-        //    Debug.WriteLine("KreditVerwaltung: LandDatenLaden");
-        //    Debug.Indent();
+        public static Bearbeitungsgebühr BearbeitungsgebührLaden()
+        {
+            Debug.WriteLine("KreditVerwaltung: BearbeitungsgebührLaden");
+            Debug.Indent();
 
-        //    Land kontaktLand = null;
+            Bearbeitungsgebühr bearbeitungsgebühr = null;
 
-        //    try
-        //    {
-        //        using (var context = new dbKreditRechnerEntities())
-        //        {
-        //            kontaktLand = context.AlleLänder.Where(x => x.ID == id).FirstOrDefault();
-        //            Debug.WriteLine("KontaktOrt geladen!");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine("Fehler in OrtDatenLaden");
-        //        Debug.Indent();
-        //        Debug.WriteLine(ex.Message);
-        //        Debug.Unindent();
-        //        Debugger.Break();
-        //    }
+            try
+            {
+                using (var context = new dbKreditRechnerEntities())
+                {
+                    bearbeitungsgebühr = context.tblBearbeitungsgebühr.FirstOrDefault();
+                    Debug.WriteLine("Bearbeitungsgebühr geladen!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Fehler in BearbeitungsgebührLaden");
+                Debug.Indent();
+                Debug.WriteLine(ex.Message);
+                Debug.Unindent();
+                Debugger.Break();
+            }
 
-        //    Debug.Unindent();
-        //    return (kontaktOrt);
-        //}
+            Debug.Unindent();
+            return bearbeitungsgebühr;
+        }
 
         #endregion
     }

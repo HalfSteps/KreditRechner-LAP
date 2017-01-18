@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -11,7 +12,10 @@ namespace _DB_AG__Online_Kredit.Models
         public string Strasse { get; set; }
         public string Hausnummer { get; set; }
         public string ID_PLZ { get; set; }
+
+        [Required, Display(Name = "Ihre E-Mail Adresse"), EmailAddress]
         public string EMail { get; set; }
+
         public string TelefonNummer { get; set; }
         public int ID_Kunde { get; set; }
         public string Ort { get; set; }

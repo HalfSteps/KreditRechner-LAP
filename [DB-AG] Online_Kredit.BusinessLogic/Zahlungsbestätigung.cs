@@ -15,24 +15,20 @@ namespace _DB_AG__Online_Kredit.BusinessLogic
 using System;
     using System.Collections.Generic;
     
-public partial class Wohnart
+public partial class Zahlungsbestätigung
 {
-
-    public Wohnart()
-    {
-
-        this.Kunde = new HashSet<Kunde>();
-
-    }
-
 
     public int ID { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public System.DateTime AntragsDatum { get; set; }
+
+    public bool ZahlungsErinnerung { get; set; }
+
+    public bool Bezahlt { get; set; }
 
 
 
-    public virtual ICollection<Kunde> Kunde { get; set; }
+    public virtual Kunde Kunde { get; set; }
 
 }
 

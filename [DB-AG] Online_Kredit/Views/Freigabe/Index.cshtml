@@ -316,7 +316,7 @@ else
     <hr />
 
     <h3>Einverständnis Erklärung</h3>
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("Home Page", "Home", FormMethod.Post))
             {
         <div class="row">
             <div class="col-lg-offset-1 col-md-offset-1 col-lg-3 col-md-3" style="text-align: right">
@@ -329,8 +329,26 @@ else
             <div class="col-lg-offset-4 col-md-offset-4 col-lg-3 col-md-3">
                 @Html.AntiForgeryToken()
                 @Html.Hidden("id", Model.Item1.ID_Kunde)
-                <input class="btn btn-default" type="submit" value="Bestätigen" onClick="javascript:window.print()">
+                <input class="btn btn-default" type="submit" value="Bestätigen & Antrag drucken" onClick="javascript:window.print()">
+             </div>
+        </div>
+    }
+    @using (Html.BeginForm("Freigabe", "Kredit", FormMethod.Post))
+            {
+        <div class="row">
+            <div class="col-lg-offset-1 col-md-offset-1 col-lg-3 col-md-3" style="text-align: right">
+            </div>
+            <div class="col-lg-6 col-md-6">
+                Oder
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-offset-4 col-md-offset-4 col-lg-3 col-md-3">
+                @Html.AntiForgeryToken()
+                @Html.Hidden("id", Model.Item1.ID_Kunde)
+                <input class="btn btn-default" type="submit" value="Bestätigen & Antrag senden" onClick="">
             </div>
         </div>
     }
+
 </div>

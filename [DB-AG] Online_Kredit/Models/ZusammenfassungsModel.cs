@@ -13,6 +13,7 @@ namespace _DB_AG__Online_Kredit.Models
 
         public int Betrag { get; set; }
         public int Laufzeit { get; set; }
+        public string KreditStatus { get; set; }
 
         public double MonatsNettoEinkommen { get; set; }
         public double Wohnkosten { get; set; }
@@ -53,6 +54,8 @@ namespace _DB_AG__Online_Kredit.Models
         public string Bank { get; set; }
         public string IBAN { get; set; }
         public string BIC { get; set; }
+
+        public decimal BearbeitungsGebühren { get; set; }
 
     }
 }
